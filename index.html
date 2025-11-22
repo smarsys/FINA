@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculateur Points FINA</title>
+    
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#667eea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="FINA Calc">
+    <meta name="description" content="Calculateur de temps et points FINA pour la natation">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 30px;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        select, input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        select:focus, input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .result {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            display: none;
+            margin-top: 20px;
+        }
+
+        .result.show {
+            display: block;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-label {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+
+        .result-value {
+            font-size: 36px;
+            font-weight: bold;
+        }
+
+        .error {
+            background: #ff6b6b;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            display: none;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .error.show {
+            display: block;
+        }
+
+        .mode-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            background: #f5f5f5;
+            padding: 5px;
+            border-radius: 10px;
+        }
+
+        .mode-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            background: transparent;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .mode-btn.active {
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            color: #667eea;
+        }
+
+        .install-prompt {
+            background: #4CAF50;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .install-prompt.show {
+            display: block;
+        }
+
+        .install-prompt button {
+            margin-top: 10px;
+            background: white;
+            color: #4CAF50;
+            padding: 10px 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏊 Calculateur Points FINA</h1>
+        
+        <div class="install-prompt" id="installPrompt">
+            <p>Installer l'application sur votre écran d'accueil ?</p>
+            <button onclick="installApp()">Installer</button>
+            <button onclick="dismissInstall()" style="background: transparent; color: white; margin-left: 10px;">Plus tard</button>
+        </div>
+        
+        <div class="mode-selector">
+            <button class="mode-btn active" onclick="setMode('points')">Points → Temps</button>
+            <button class="mode-btn" onclick="setMode('time')">Temps → Points</button>
+        </div>
+
+        <div class="form-group">
+            <label for="pool">Type de bassin</label>
+            <select id="pool" onchange="updateDistances()">
+                <option value="25m">Bassin 25m</option>
+                <option value="50m">Bassin 50m</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="stroke">Nage</label>
+            <select id="stroke" onchange="updateDistances()">
+                <option value="libre">Nage libre</option>
+                <option value="dos">Dos</option>
+                <option value="brasse">Brasse</option>
+                <option value="papillon">Papillon</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="distance">Distance</label>
+            <select id="distance">
+                <option value="50">50m</option>
+            </select>
+        </div>
+
+        <div class="form-group" id="pointsInput">
+            <label for="points">Points FINA souhaités</label>
+            <input type="number" id="points" placeholder="Ex: 500" min="1" max="1500">
+        </div>
+
+        <div class="form-group" id="timeInput" style="display: none;">
+            <label for="time">Temps réalisé (mm:ss.cc)</label>
+            <input type="text" id="time" placeholder="Ex: 01:30.50">
+        </div>
+
+        <button class="btn-primary" onclick="calculate()">Calculer</button>
+
+        <div class="result" id="result">
+            <div class="result-label" id="resultLabel">Temps minimum requis</div>
+            <div class="result-value" id="resultValue">--:--:--</div>
+        </div>
+
+        <div class="error" id="error"></div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        // Enregistrement du service worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(registration => {
+                        console.log('Service Worker enregistré:', registration);
+                    })
+                    .catch(error => {
+                        console.log('Erreur Service Worker:', error);
+                    });
+            });
+        }
+
+        // Gestion de l'installation PWA
+        let deferredPrompt;
+        
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            document.getElementById('installPrompt').classList.add('show');
+        });
+
+        function installApp() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('Application installée');
+                    }
+                    deferredPrompt = null;
+                    document.getElementById('installPrompt').classList.remove('show');
+                });
+            }
+        }
+
+        function dismissInstall() {
+            document.getElementById('installPrompt').classList.remove('show');
+        }
+
+        window.addEventListener('appinstalled', () => {
+            console.log('PWA installée avec succès');
+            document.getElementById('installPrompt').classList.remove('show');
+        });
+    </script>
+</body>
+</html>
