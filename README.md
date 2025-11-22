@@ -5,6 +5,7 @@ Application web progressive (PWA) pour calculer les temps minimum requis pour ob
 ## Fonctionnalités
 
 - ✅ Calcul bidirectionnel : Points → Temps ou Temps → Points
+- ✅ Catégories Homme et Femme avec temps de base séparés
 - ✅ Support bassin 25m et 50m
 - ✅ Toutes les nages : Libre, Dos, Brasse, Papillon
 - ✅ Distances standards selon la nage
@@ -79,10 +80,20 @@ Les temps de base sont stockés dans `fina-times.json`. Pour les mettre à jour 
 Exemple de structure :
 ```json
 {
-  "25m": {
-    "libre": {
-      "50": "00:20.16",
-      "100": "00:44.84"
+  "homme": {
+    "25m": {
+      "libre": {
+        "50": "00:20.16",
+        "100": "00:44.84"
+      }
+    }
+  },
+  "femme": {
+    "25m": {
+      "libre": {
+        "50": "00:22.93",
+        "100": "00:50.90"
+      }
     }
   }
 }

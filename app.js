@@ -65,14 +65,15 @@ function setMode(mode) {
 
 // Mettre à jour les distances disponibles
 function updateDistances() {
+    const gender = document.getElementById('gender').value;
     const pool = document.getElementById('pool').value;
     const stroke = document.getElementById('stroke').value;
     const distanceSelect = document.getElementById('distance');
     
     distanceSelect.innerHTML = '';
     
-    if (finaData[pool] && finaData[pool][stroke]) {
-        const distances = Object.keys(finaData[pool][stroke]);
+    if (finaData[gender] && finaData[gender][pool] && finaData[gender][pool][stroke]) {
+        const distances = Object.keys(finaData[gender][pool][stroke]);
         distances.forEach(dist => {
             const option = document.createElement('option');
             option.value = dist;
@@ -86,11 +87,12 @@ function updateDistances() {
 
 // Calculer
 function calculate() {
+    const gender = document.getElementById('gender').value;
     const pool = document.getElementById('pool').value;
     const stroke = document.getElementById('stroke').value;
     const distance = document.getElementById('distance').value;
     
-    const baseTime = finaData[pool]?.[stroke]?.[distance];
+    const baseTime = finaData[gender]?.[pool]?.[stroke]?.[distance];
     
     if (!baseTime) {
         showError('Données non disponibles pour cette combinaison');
