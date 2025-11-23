@@ -1,11 +1,11 @@
 {
-  "name": "Calculateur Points FINA",
-  "short_name": "FINA Calc",
-  "description": "Calculateur de temps et points FINA pour la natation",
+  "name": "Calculateur FINA - Lausanne Aquatique",
+  "short_name": "FINA LA",
+  "description": "Calculateur de points FINA pour la natation - Lausanne Aquatique",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#667eea",
-  "theme_color": "#667eea",
+  "background_color": "#E31E24",
+  "theme_color": "#E31E24",
   "orientation": "portrait",
   "icons": [
     {

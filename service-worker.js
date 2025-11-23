@@ -1,4 +1,4 @@
-const CACHE_NAME = 'fina-calculator-v2';
+const CACHE_NAME = 'fina-calculator-v3';
 const urlsToCache = [
   '/',
   '/index.html',
@@ -6,7 +6,8 @@ const urlsToCache = [
   '/fina-times.json',
   '/manifest.json',
   '/icon-192.png',
-  '/icon-512.png'
+  '/icon-512.png',
+  '/logo-lausanne-aquatique.png'
 ];
 
 // Installation du service worker
