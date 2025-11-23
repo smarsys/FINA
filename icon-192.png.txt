@@ -1,0 +1,20 @@
+Pour créer les icônes avec le logo Lausanne Aquatique :
+
+Option 1 - Utiliser un outil en ligne :
+1. Allez sur https://www.canva.com ou https://www.figma.com
+2. Créez un design de 192x192 pixels
+3. Fond bleu (#0066cc)
+4. Ajoutez le texte "LA" en blanc et une vague stylisée
+5. Exportez en PNG
+
+Option 2 - Si vous avez le logo officiel :
+1. Redimensionnez-le en 192x192 pixels et 512x512 pixels
+2. Nommez les fichiers icon-192.png et icon-512.png
+3. Remplacez ces fichiers dans le dossier
+
+Option 3 - Design simple :
+- Fond bleu (#0066cc)
+- Texte "LA" en blanc, centré, police Arial Bold 80px
+- Icône de vague 🌊 en dessous
+
+Pour l'instant, créez manuellement ces icônes ou utilisez des icônes temporaires.
