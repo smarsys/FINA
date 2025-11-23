@@ -1,4 +1,4 @@
-const CACHE_NAME = 'fina-calculator-v10';
+const CACHE_NAME = 'fina-calculator-v12-icons';
 const urlsToCache = [
   '/',
   '/index.html',
@@ -7,6 +7,7 @@ const urlsToCache = [
   '/manifest.json',
   '/icon-192.png',
   '/icon-512.png',
+  '/apple-touch-icon.png',
   '/logo-lausanne-aquatique.png'
 ];
 
