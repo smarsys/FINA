@@ -1,4 +1,4 @@
-const CACHE_NAME = 'fina-calculator-v12-icons';
+const CACHE_NAME = 'fina-calculator-v13-4nages-complet';
 const urlsToCache = [
   '/',
   '/index.html',
