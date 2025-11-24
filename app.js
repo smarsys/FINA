@@ -121,7 +121,7 @@ function calculate() {
     const stroke = document.getElementById('stroke').value;
     const distance = document.getElementById('distance').value;
     
-    hideMessages();
+    hideResult();
     
     if (currentMode === 'limits') {
         // Mode temps limites
