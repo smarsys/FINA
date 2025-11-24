@@ -1,4 +1,5 @@
 let finaData = {};
+let tempsLimitesData = {};
 let currentMode = 'points';
 
 // Charger les données FINA
@@ -11,6 +12,16 @@ fetch('fina-times.json')
     .catch(error => {
         showError('Erreur lors du chargement des données FINA');
         console.error(error);
+    });
+
+// Charger les données des temps limites
+fetch('temps-limites.json')
+    .then(response => response.json())
+    .then(data => {
+        tempsLimitesData = data;
+    })
+    .catch(error => {
+        console.error('Erreur lors du chargement des temps limites:', error);
     });
 
 // Convertir mm:ss.cc en secondes
@@ -50,14 +61,33 @@ function setMode(mode) {
     document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
     event.target.classList.add('active');
     
+    const pointsInput = document.getElementById('pointsInput');
+    const timeInput = document.getElementById('timeInput');
+    const competitionSelect = document.getElementById('competitionSelect');
+    const poolSelect = document.getElementById('pool').closest('.form-group');
+    const calculateBtn = document.getElementById('calculateBtn');
+    
     if (mode === 'points') {
-        document.getElementById('pointsInput').style.display = 'block';
-        document.getElementById('timeInput').style.display = 'none';
+        pointsInput.style.display = 'block';
+        timeInput.style.display = 'none';
+        competitionSelect.style.display = 'none';
+        poolSelect.style.display = 'block';
+        calculateBtn.textContent = 'Calculer';
         document.getElementById('resultLabel').textContent = 'Temps minimum requis';
-    } else {
-        document.getElementById('pointsInput').style.display = 'none';
-        document.getElementById('timeInput').style.display = 'block';
+    } else if (mode === 'time') {
+        pointsInput.style.display = 'none';
+        timeInput.style.display = 'block';
+        competitionSelect.style.display = 'none';
+        poolSelect.style.display = 'block';
+        calculateBtn.textContent = 'Calculer';
         document.getElementById('resultLabel').textContent = 'Points FINA obtenus';
+    } else if (mode === 'limits') {
+        pointsInput.style.display = 'none';
+        timeInput.style.display = 'none';
+        competitionSelect.style.display = 'block';
+        poolSelect.style.display = 'none';
+        calculateBtn.textContent = 'Afficher les temps';
+        document.getElementById('resultLabel').textContent = 'Temps limites de qualification';
     }
     
     hideResult();
@@ -88,10 +118,61 @@ function updateDistances() {
 // Calculer
 function calculate() {
     const gender = document.getElementById('gender').value;
-    const pool = document.getElementById('pool').value;
     const stroke = document.getElementById('stroke').value;
     const distance = document.getElementById('distance').value;
     
+    hideMessages();
+    
+    if (currentMode === 'limits') {
+        // Mode temps limites
+        const competition = document.getElementById('competition').value;
+        
+        if (!tempsLimitesData[competition]) {
+            showError('Données non disponibles pour cette compétition');
+            return;
+        }
+        
+        const limitTime = tempsLimitesData[competition]?.[gender]?.[stroke]?.[distance];
+        
+        if (!limitTime) {
+            showError('Temps limite non disponible pour cette combinaison');
+            return;
+        }
+        
+        if (limitTime === "00:00.00") {
+            showError('Temps limite non encore défini. Veuillez consulter la fédération.');
+            return;
+        }
+        
+        // Calculer les points FINA correspondants
+        // Déterminer le bassin selon la compétition
+        let pool = '50m';
+        if (competition.includes('25m') || competition === 'rsr_25m') {
+            pool = '25m';
+        }
+        
+        const baseTime = finaData[gender]?.[pool]?.[stroke]?.[distance];
+        let finaPoints = 'N/A';
+        
+        if (baseTime) {
+            finaPoints = calculatePoints(baseTime, limitTime);
+        }
+        
+        // Afficher le temps limite avec les points FINA
+        const competitionNames = {
+            'championnat_suisse_25m': 'Championnat Suisse 25m',
+            'championnat_suisse_50m': 'Championnat Suisse 50m',
+            'rsr_25m': 'RSR 25m',
+            'rsr_50m': 'RSR 50m'
+        };
+        
+        document.getElementById('resultLabel').textContent = competitionNames[competition];
+        showResult(`${limitTime} (${finaPoints} pts)`);
+        return;
+    }
+    
+    // Modes normaux (points et time)
+    const pool = document.getElementById('pool').value;
     const baseTime = finaData[gender]?.[pool]?.[stroke]?.[distance];
     
     if (!baseTime) {

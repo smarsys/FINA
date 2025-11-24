@@ -1,9 +1,10 @@
-const CACHE_NAME = 'fina-calculator-v13-4nages-complet';
+const CACHE_NAME = 'fina-calculator-v14.3-suisse-only';
 const urlsToCache = [
   '/',
   '/index.html',
   '/app.js',
   '/fina-times.json',
+  '/temps-limites.json',
   '/manifest.json',
   '/icon-192.png',
   '/icon-512.png',
