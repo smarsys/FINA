@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instructions de mise à jour - FINA LA</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #E31E24 0%, #B01519 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 30px;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #E31E24;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        h2 {
+            color: #333;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        p, li {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .highlight {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #E31E24;
+            margin: 20px 0;
+        }
+
+        .step {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+        }
+
+        .step strong {
+            color: #E31E24;
+        }
+
+        ol {
+            margin-left: 20px;
+        }
+
+        ol li {
+            margin-bottom: 15px;
+        }
+
+        .code {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 10px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 10px 0;
+            overflow-x: auto;
+        }
+
+        .button {
+            display: inline-block;
+            background: linear-gradient(135deg, #E31E24 0%, #B01519 100%);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 20px;
+            transition: transform 0.3s;
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+        }
+
+        .emoji {
+            font-size: 24px;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><span class="emoji">🏆</span>Instructions de mise à jour - JO LA28</h1>
+        
+        <div class="highlight">
+            <strong>⚠️ Important :</strong> Si vous ne voyez pas les options "JO LA28" dans le sélecteur, c'est que votre navigateur utilise une ancienne version en cache.
+        </div>
+
+        <h2>🔄 Solution 1 : Vider le cache du navigateur</h2>
+        
+        <div class="step">
+            <strong>Sur ordinateur :</strong>
+            <ol>
+                <li>Appuyez sur <code class="code">Ctrl + Shift + R</code> (Windows/Linux) ou <code class="code">Cmd + Shift + R</code> (Mac)</li>
+                <li>Cela force le rechargement complet de la page</li>
+            </ol>
+        </div>
+
+        <div class="step">
+            <strong>Sur iPhone/iPad :</strong>
+            <ol>
+                <li>Allez dans <strong>Réglages</strong> → <strong>Safari</strong></li>
+                <li>Faites défiler vers le bas</li>
+                <li>Appuyez sur <strong>Effacer historique et données de site</strong></li>
+                <li>Confirmez</li>
+                <li>Retournez dans Safari et rechargez l'application</li>
+            </ol>
+        </div>
+
+        <div class="step">
+            <strong>Sur Android :</strong>
+            <ol>
+                <li>Ouvrez Chrome</li>
+                <li>Appuyez sur les <strong>trois points</strong> en haut à droite</li>
+                <li>Sélectionnez <strong>Historique</strong> → <strong>Effacer les données de navigation</strong></li>
+                <li>Cochez <strong>Images et fichiers en cache</strong></li>
+                <li>Appuyez sur <strong>Effacer les données</strong></li>
+                <li>Rechargez l'application</li>
+            </ol>
+        </div>
+
+        <h2>🔄 Solution 2 : Désinstaller et réinstaller la PWA</h2>
+        
+        <div class="step">
+            <strong>Si l'application est installée sur votre écran d'accueil :</strong>
+            <ol>
+                <li>Supprimez l'icône de l'application de votre écran d'accueil</li>
+                <li>Ouvrez l'URL de l'application dans votre navigateur</li>
+                <li>Réinstallez l'application via le bouton "Installer"</li>
+            </ol>
+        </div>
+
+        <h2>✅ Vérification</h2>
+        
+        <p>Après avoir vidé le cache, vous devriez voir dans le sélecteur de compétition :</p>
+        <ul style="margin-left: 20px;">
+            <li>Championnat Suisse 25m</li>
+            <li>Championnat Suisse 50m</li>
+            <li>RSR 25m</li>
+            <li>RSR 50m</li>
+            <li><strong>🏆 JO LA28 - Standard A (50m)</strong> ← NOUVEAU</li>
+            <li><strong>🏆 JO LA28 - Standard B (50m)</strong> ← NOUVEAU</li>
+        </ul>
+
+        <h2>📝 Version déployée</h2>
+        <p>Assurez-vous que le fichier <code class="code">service-worker.js</code> contient :</p>
+        <div class="code">const CACHE_NAME = 'fina-calculator-v14.3-jo-la28';</div>
+
+        <h2>🆘 Toujours un problème ?</h2>
+        <p>Si les options JO n'apparaissent toujours pas :</p>
+        <ol>
+            <li>Vérifiez que tous les fichiers ont bien été déployés (surtout <code>temps-limites.json</code> et <code>index.html</code>)</li>
+            <li>Ouvrez la console du navigateur (F12) et vérifiez s'il y a des erreurs</li>
+            <li>Vérifiez que le fichier <code>temps-limites.json</code> contient bien les entrées <code>jo_a_50m</code> et <code>jo_b_50m</code></li>
+        </ol>
+
+        <a href="index.html" class="button">Ouvrir l'application</a>
+    </div>
+</body>
+</html>
