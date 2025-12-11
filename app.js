@@ -73,6 +73,7 @@ function setMode(mode) {
         competitionSelect.style.display = 'none';
         poolSelect.style.display = 'block';
         calculateBtn.textContent = 'Calculer';
+        calculateBtn.style.display = 'block';
         document.getElementById('resultLabel').textContent = 'Temps minimum requis';
     } else if (mode === 'time') {
         pointsInput.style.display = 'none';
@@ -80,14 +81,17 @@ function setMode(mode) {
         competitionSelect.style.display = 'none';
         poolSelect.style.display = 'block';
         calculateBtn.textContent = 'Calculer';
+        calculateBtn.style.display = 'block';
         document.getElementById('resultLabel').textContent = 'Points FINA obtenus';
     } else if (mode === 'limits') {
         pointsInput.style.display = 'none';
         timeInput.style.display = 'none';
-        competitionSelect.style.display = 'block';
+        competitionSelect.style.display = 'none';
         poolSelect.style.display = 'none';
-        calculateBtn.textContent = 'Afficher les temps';
+        calculateBtn.style.display = 'none';
         document.getElementById('resultLabel').textContent = 'Temps limites de qualification';
+        // Afficher automatiquement les temps limites
+        displayAllLimits();
     }
     
     hideResult();
@@ -233,4 +237,133 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('time')?.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') calculate();
     });
+    
+    // Mettre à jour l'affichage des temps limites quand on change de catégorie ou de nage
+    document.getElementById('gender')?.addEventListener('change', () => {
+        if (currentMode === 'limits') {
+            displayAllLimits();
+        }
+    });
+    document.getElementById('stroke')?.addEventListener('change', () => {
+        if (currentMode === 'limits') {
+            displayAllLimits();
+        }
+    });
+    document.getElementById('distance')?.addEventListener('change', () => {
+        if (currentMode === 'limits') {
+            displayAllLimits();
+        }
+    });
 });
+
+// Afficher tous les temps limites pour la catégorie, nage et distance sélectionnées
+function displayAllLimits() {
+    const gender = document.getElementById('gender').value;
+    const stroke = document.getElementById('stroke').value;
+    const distance = document.getElementById('distance').value;
+    
+    const resultDiv = document.getElementById('result');
+    const errorDiv = document.getElementById('error');
+    
+    // Collecter tous les temps pour cette combinaison
+    const allTimes = [];
+    
+    const competitionNames = {
+        'championnat_suisse_25m': 'CS 25m',
+        'championnat_suisse_50m': 'CS 50m',
+        'rsr_25m': 'RSR 25m',
+        'rsr_50m': 'RSR 50m',
+        'jo_a_50m': '🏆 JO A',
+        'jo_b_50m': '🏆 JO B'
+    };
+    
+    // Parcourir toutes les compétitions
+    for (const [compKey, compName] of Object.entries(competitionNames)) {
+        const limitTime = tempsLimitesData[compKey]?.[gender]?.[stroke]?.[distance];
+        
+        if (limitTime && limitTime !== "00:00.00") {
+            // Calculer les points FINA
+            let pool = '50m';
+            if (compKey.includes('25m')) {
+                pool = '25m';
+            }
+            
+            const baseTime = finaData[gender]?.[pool]?.[stroke]?.[distance];
+            let finaPoints = 'N/A';
+            
+            if (baseTime) {
+                finaPoints = calculatePoints(baseTime, limitTime);
+            }
+            
+            allTimes.push({
+                competition: compName,
+                time: limitTime,
+                points: finaPoints,
+                seconds: timeToSeconds(limitTime)
+            });
+        }
+    }
+    
+    // Trier du plus lent au plus rapide (ordre décroissant des secondes)
+    allTimes.sort((a, b) => b.seconds - a.seconds);
+    
+    if (allTimes.length === 0) {
+        errorDiv.textContent = 'Aucun temps limite disponible pour cette combinaison';
+        errorDiv.classList.add('show');
+        resultDiv.classList.remove('show');
+        return;
+    }
+    
+    // Créer le tableau HTML
+    let tableHTML = `
+        <div style="font-size: 13px; margin-bottom: 10px; opacity: 0.9;">
+            ${gender === 'homme' ? 'Homme' : 'Femme'} - ${getStrokeName(stroke)} - ${distance}m
+        </div>
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr style="border-bottom: 2px solid rgba(255,255,255,0.3);">
+                    <th style="text-align: left; padding: 8px; font-size: 13px;">Compétition</th>
+                    <th style="text-align: center; padding: 8px; font-size: 13px;">Temps</th>
+                    <th style="text-align: right; padding: 8px; font-size: 13px;">Points</th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
+    
+    allTimes.forEach((item, index) => {
+        const isOlympic = item.competition.includes('🏆');
+        const rowStyle = isOlympic ? 'background: rgba(255,255,255,0.15); font-weight: 600;' : '';
+        
+        tableHTML += `
+            <tr style="${rowStyle}">
+                <td style="padding: 10px 8px; font-size: 14px; border-bottom: 1px solid rgba(255,255,255,0.2);">${item.competition}</td>
+                <td style="padding: 10px 8px; font-size: 16px; font-weight: bold; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.2);">${item.time}</td>
+                <td style="padding: 10px 8px; font-size: 14px; text-align: right; border-bottom: 1px solid rgba(255,255,255,0.2);">${item.points} pts</td>
+            </tr>
+        `;
+    });
+    
+    tableHTML += `
+            </tbody>
+        </table>
+        <div style="font-size: 11px; margin-top: 10px; opacity: 0.8; text-align: center;">
+            Du plus facile ⬆️ au plus difficile ⬇️
+        </div>
+    `;
+    
+    resultDiv.innerHTML = tableHTML;
+    resultDiv.classList.add('show');
+    errorDiv.classList.remove('show');
+}
+
+// Obtenir le nom complet de la nage
+function getStrokeName(stroke) {
+    const names = {
+        'libre': 'Nage libre',
+        'dos': 'Dos',
+        'brasse': 'Brasse',
+        'papillon': 'Papillon',
+        '4nages': '4 nages'
+    };
+    return names[stroke] || stroke;
+}

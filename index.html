@@ -138,11 +138,25 @@
             text-align: center;
             display: none;
             margin-top: 12px;
+            overflow-x: auto;
         }
 
         .result.show {
             display: block;
             animation: slideIn 0.3s ease-out;
+        }
+
+        .result table {
+            color: white;
+        }
+
+        .result th {
+            font-weight: 600;
+            opacity: 0.9;
+        }
+
+        .result td {
+            color: white;
         }
 
         @keyframes slideIn {
