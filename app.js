@@ -163,7 +163,9 @@ function calculate() {
             'championnat_suisse_25m': 'Championnat Suisse 25m',
             'championnat_suisse_50m': 'Championnat Suisse 50m',
             'rsr_25m': 'RSR 25m',
-            'rsr_50m': 'RSR 50m'
+            'rsr_50m': 'RSR 50m',
+            'jo_a_50m': '🏆 JO LA28 - Standard A',
+            'jo_b_50m': '🏆 JO LA28 - Standard B'
         };
         
         document.getElementById('resultLabel').textContent = competitionNames[competition];
